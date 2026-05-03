@@ -1,18 +1,30 @@
+import 'package:flutter/material.dart';
+
 /// Class Habit (simpan data kebiasaan)
 
 class Habit {
-  String name;     // nama habt
-  bool isDone;     // status
+  String name;
+  bool isDone;
+  IconData icon; 
 
-  Habit(this.name, {this.isDone = false});
+  Habit({
+    required this.name,
+    this.isDone = false,
+    required this.icon,
+  });
 }
 
 /// Class ToDo ( simpan data tugas)
 class Todo {
-  String title;    // nama tugas
-  bool isDone;     // status
+  String title;
+  bool isDone;
+  IconData icon; // 🔥 tambahin
 
-  Todo(this.title, {this.isDone = false});
+  Todo({
+    required this.title,
+    this.isDone = false,
+    required this.icon,
+  });
 }
 
 /// simpan data
@@ -33,8 +45,10 @@ int air = 0;
 
 
 // new habit ke list
-void tambahHabit(String nama) {
-  habitList.add(Habit(nama));
+void tambahHabit(String name, IconData icon) {
+  habitList.add(
+    Habit(name: name, icon: icon),
+  );
 }
 
 // ceklist habit - index
@@ -50,8 +64,10 @@ void checkHabit(int index) {
 //-----------------
 
 // todo baru
-void tambahTodo(String title) {
-  todoList.add(Todo(title));
+void tambahTodo(String title, IconData icon) {
+  todoList.add(
+    Todo(title: title, icon: icon),
+  );
 }
 
 // ceklist todo
