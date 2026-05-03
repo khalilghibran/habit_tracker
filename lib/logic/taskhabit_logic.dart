@@ -1,20 +1,31 @@
+import 'package:flutter/material.dart';
 import 'package:habit_tracker/logic/plant_logic.dart';
 
 /// Class Habit (simpan data kebiasaan)
 
 class Habit {
-  String name;     // nama habt
-  bool isDone;     // status
+  String name;
+  bool isDone;
+  IconData icon; 
 
-  Habit(this.name, {this.isDone = false});
+  Habit({
+    required this.name,
+    this.isDone = false,
+    required this.icon,
+  });
 }
 
 /// Class ToDo ( simpan data tugas)
 class Todo {
-  String title;    // nama tugas
-  bool isDone;     // status
+  String title;
+  bool isDone;
+  IconData icon; // 🔥 tambahin
 
-  Todo(this.title, {this.isDone = false});
+  Todo({
+    required this.title,
+    this.isDone = false,
+    required this.icon,
+  });
 }
 
 /// simpan data
@@ -35,8 +46,10 @@ int air = 0;
 
 
 // new habit ke list
-Future<void> tambahHabit(String nama) async {
-  habitList.add(Habit(nama));
+Future<void> tambahHabit(String name, IconData icon) async {
+  habitList.add(
+    Habit(name: name, icon: icon),
+  );
   // Reward water untuk menambah habit baru (+1 water)
   await tambahAir(1);
 }
@@ -54,8 +67,10 @@ Future<void> checkHabit(int index) async {
 //-----------------
 
 // todo baru
-Future<void> tambahTodo(String title) async {
-  todoList.add(Todo(title));
+Future<void> tambahTodo(String title, IconData icon) async {
+  todoList.add(
+    Todo(title: title, icon: icon),
+  );
   // Reward water untuk menambah todo baru (+1 water)
   await tambahAir(1);
 }

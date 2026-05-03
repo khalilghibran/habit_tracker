@@ -7,6 +7,9 @@ import 'package:habit_tracker/screens/todo_screen.dart';
 import 'package:habit_tracker/screens/habit_screen.dart';
 import 'package:habit_tracker/logic/taskhabit_logic.dart';
 
+import 'package:habit_tracker/pages/todo_page.dart';
+
+
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -443,12 +446,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         type: BottomNavigationBarType.fixed,
         currentIndex: 0,
       onTap: (index) {
-  if (index == 1) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const HabitScreen()),
-    );
-  } else if (index == 2) {
+  if (index == 2) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const MoodInputScreen()),
