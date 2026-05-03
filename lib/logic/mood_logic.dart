@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import '../models/mood_model.dart';
-import '../models/weekly_report_model.dart';
 
 class MoodLogic extends ChangeNotifier {
   List<MoodEntry> _moodHistory = [];
