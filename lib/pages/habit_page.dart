@@ -14,13 +14,13 @@ class _HabitPageState extends State<HabitPage> {
   int selectedIconIndex = 0;
   bool reminder = false;
 
-  List<IconData> icons = [
-    Icons.water_drop,
-    Icons.fitness_center,
-    Icons.self_improvement,
-    Icons.menu_book,
-    Icons.wb_sunny,
-    Icons.local_drink,
+  List<String> icons = [
+    '💧',
+    '💪',
+    '🧘',
+    '📚',
+    '☀️',
+    '🍵',
   ];
 
   @override
@@ -104,10 +104,9 @@ class _HabitPageState extends State<HabitPage> {
                       ),
                     ),
                     child: Center(
-                      child: Icon(
+                      child: Text(
                         icons[index],
-                        size: 28, // 🔥 ini kunci utama
-                        color: Colors.white,
+                        style: const TextStyle(fontSize: 28),
                       ),
                     ),
                   ),

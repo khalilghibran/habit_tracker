@@ -229,7 +229,7 @@ class _TodoScreenState extends State<TodoScreen> {
               child: ElevatedButton(
                 onPressed: () async {
                   if (todoController.text.isNotEmpty) {
-                    await tambahTodo(todoController.text);
+                    await tambahTodo(todoController.text, '📝');
                     setState(() {
                       todoController.clear();
                     });

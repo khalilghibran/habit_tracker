@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:habit_tracker/logic/plant_logic.dart';
 
 /// Class Habit (simpan data kebiasaan)
@@ -6,7 +5,7 @@ import 'package:habit_tracker/logic/plant_logic.dart';
 class Habit {
   String name;
   bool isDone;
-  IconData icon; 
+  String icon; 
 
   Habit({
     required this.name,
@@ -19,7 +18,7 @@ class Habit {
 class Todo {
   String title;
   bool isDone;
-  IconData icon; // 🔥 tambahin
+  String icon; // 🔥 tambahin
 
   Todo({
     required this.title,
@@ -46,7 +45,7 @@ int air = 0;
 
 
 // new habit ke list
-Future<void> tambahHabit(String name, IconData icon) async {
+Future<void> tambahHabit(String name, String icon) async {
   habitList.add(
     Habit(name: name, icon: icon),
   );
@@ -67,7 +66,7 @@ Future<void> checkHabit(int index) async {
 //-----------------
 
 // todo baru
-Future<void> tambahTodo(String title, IconData icon) async {
+Future<void> tambahTodo(String title, String icon) async {
   todoList.add(
     Todo(title: title, icon: icon),
   );

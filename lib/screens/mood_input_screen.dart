@@ -21,6 +21,21 @@ class _MoodInputScreenState extends State<MoodInputScreen> {
     super.dispose();
   }
 
+  String _getMoodEmoji(MoodType mood) {
+    switch (mood) {
+      case MoodType.senang:
+        return '😄';
+      case MoodType.baik:
+        return '😊';
+      case MoodType.biasa:
+        return '😐';
+      case MoodType.sedih:
+        return '😔';
+      case MoodType.buruk:
+        return '😢';
+    }
+  }
+
   Future<void> _submitMood() async {
     if (_selectedMood == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -246,7 +261,7 @@ class _MoodInputScreenState extends State<MoodInputScreen> {
           // Big emoji
           Center(
             child: Text(
-              _selectedMood!.getMoodEmoji(),
+              _getMoodEmoji(_selectedMood!),
               style: const TextStyle(fontSize: 120),
             ),
           ),

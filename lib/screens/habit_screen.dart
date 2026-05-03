@@ -43,7 +43,7 @@ class _HabitScreenState extends State<HabitScreen> {
 
   Future<void> _addHabit() async {
     if (_habitNameController.text.isNotEmpty) {
-      await tambahHabit(_habitNameController.text);
+      await tambahHabit(_habitNameController.text, _selectedIcon);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

@@ -132,7 +132,7 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
                         child: Row(
                           children: [
                             Text(
-                              entry.mood.getMoodEmoji(),
+                              _getMoodEmoji(entry.mood),
                               style: const TextStyle(fontSize: 28),
                             ),
                             const SizedBox(width: 12),
@@ -150,7 +150,7 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    entry.mood.getMoodLabel(),
+                                    _getMoodLabel(entry.mood),
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 14,
@@ -263,13 +263,43 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
                       ),
                     ],
                   ),
-                );
+                ),
               );
             }).toList(),
           ],
         ),
       ),
     );
+  }
+
+  String _getMoodEmoji(MoodType mood) {
+    switch (mood) {
+      case MoodType.senang:
+        return '😄';
+      case MoodType.baik:
+        return '😊';
+      case MoodType.biasa:
+        return '😐';
+      case MoodType.sedih:
+        return '😔';
+      case MoodType.buruk:
+        return '😢';
+    }
+  }
+
+  String _getMoodLabel(MoodType mood) {
+    switch (mood) {
+      case MoodType.senang:
+        return 'Senang';
+      case MoodType.baik:
+        return 'Baik';
+      case MoodType.biasa:
+        return 'Biasa';
+      case MoodType.sedih:
+        return 'Sedih';
+      case MoodType.buruk:
+        return 'Buruk';
+    }
   }
 
   String _getDayName(DateTime date) {

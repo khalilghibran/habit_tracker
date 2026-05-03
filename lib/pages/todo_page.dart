@@ -86,7 +86,7 @@ class _TodoPageState extends State<TodoPage> {
                     if (todoController.text.isNotEmpty) {
                       tambahTodo(
                         todoController.text,
-                          Icons.check,
+                        '📝',
                       );
                       todoController.clear();
                     }
@@ -126,10 +126,9 @@ class _TodoPageState extends State<TodoPage> {
                           color: const Color(0xFF0D1F0F),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Icon(
+                        child: Text(
                           item.icon,
-                          color: Colors.white,
-                          size: 20,
+                          style: const TextStyle(fontSize: 20),
                         ),
                       ),
 

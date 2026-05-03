@@ -21,19 +21,6 @@ class _SleepInputScreenState extends State<SleepInputScreen> {
     _minutes = 30;
   }
 
-  void _addMinutes(int amount) {
-    setState(() {
-      _minutes += amount;
-      if (_minutes >= 60) {
-        _hours += 1;
-        _minutes -= 60;
-      } else if (_minutes < 0) {
-        _hours -= 1;
-        _minutes += 60;
-      }
-    });
-  }
-
   void _addHours(int amount) {
     setState(() {
       _hours += amount;
