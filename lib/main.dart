@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:habit_tracker/screens/dashboard_screen.dart';
+import 'package:habit_tracker/screens/splash_screen.dart';
 import 'package:habit_tracker/logic/mood_logic.dart';
 import 'package:habit_tracker/logic/sleep_logic.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SharedPreferences.getInstance();
   runApp(const MyApp());
 }
 
@@ -28,7 +26,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
           useMaterial3: true,
         ),
-        home: const DashboardScreen(),
+        home: const SplashScreen(),
       ),
     );
   }

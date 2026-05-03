@@ -1,3 +1,5 @@
+import 'package:habit_tracker/logic/plant_logic.dart';
+
 /// Class Habit (simpan data kebiasaan)
 
 class Habit {
@@ -33,15 +35,17 @@ int air = 0;
 
 
 // new habit ke list
-void tambahHabit(String nama) {
+Future<void> tambahHabit(String nama) async {
   habitList.add(Habit(nama));
+  // Reward water untuk menambah habit baru (+1 water)
+  await tambahAir(1);
 }
 
 // ceklist habit - index
-void checkHabit(int index) {
+Future<void> checkHabit(int index) async {
   if (!habitList[index].isDone) {
     habitList[index].isDone = true; // -> selesai
-    tambahAir(); // dapat  reward
+    await tambahAir(1); // dapat reward (+1 water per habit completion)
   }
 }
 
@@ -50,15 +54,17 @@ void checkHabit(int index) {
 //-----------------
 
 // todo baru
-void tambahTodo(String title) {
+Future<void> tambahTodo(String title) async {
   todoList.add(Todo(title));
+  // Reward water untuk menambah todo baru (+1 water)
+  await tambahAir(1);
 }
 
 // ceklist todo
-void checkTodo(int index) {
+Future<void> checkTodo(int index) async {
   if (!todoList[index].isDone) {
     todoList[index].isDone = true;
-    tambahAir(); // tambah reward
+    await tambahAir(1); // tambah reward (+1 water per todo completion)
   }
 }
 
@@ -68,6 +74,8 @@ void checkTodo(int index) {
 /// Function Reward
 //-----------------
 
-void tambahAir() {
-  air++; // airr +1
+Future<void> tambahAir(int amount) async {
+  air += amount;
+  // Automatically add water to plant
+  await PlantLogic.addWaterReward(amount);
 }

@@ -3,6 +3,8 @@ import 'package:habit_tracker/logic/plant_logic.dart';
 import 'package:habit_tracker/screens/report_screen.dart';
 import 'package:habit_tracker/screens/mood_input_screen.dart';
 import 'package:habit_tracker/screens/sleep_input_screen.dart';
+import 'package:habit_tracker/screens/todo_screen.dart';
+import 'package:habit_tracker/screens/habit_screen.dart';
 import 'package:habit_tracker/logic/taskhabit_logic.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -230,41 +232,50 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         const SizedBox(width: 12),
                         // Todo Harian
                         Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF1A3A1A),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'To-Do Harian',
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 12),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute<void>(
+                                  builder: (_) => const TodoScreen(),
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '$_todoSelesai / $_todoTotal',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF1A3A1A),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'To-Do Harian',
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 12),
                                   ),
-                                ),
-                                const SizedBox(height: 8),
-                                LinearProgressIndicator(
-                                  value: _todoTotal > 0
-                                      ? _todoSelesai / _todoTotal
-                                      : 0,
-                                  backgroundColor: const Color(0xFF0D1F0F),
-                                  valueColor:
-                                      const AlwaysStoppedAnimation<Color>(
-                                          Colors.blue),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                              ],
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '$_todoSelesai / $_todoTotal',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  LinearProgressIndicator(
+                                    value: _todoTotal > 0
+                                        ? _todoSelesai / _todoTotal
+                                        : 0,
+                                    backgroundColor: const Color(0xFF0D1F0F),
+                                    valueColor:
+                                        const AlwaysStoppedAnimation<Color>(
+                                            Colors.blue),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -309,9 +320,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           const SizedBox(height: 12),
                           // Info level
                           Text(
-                            '${5 - (_plantInfo['waterCount'] ?? 0)} siram lagi ke ${_plantInfo['stageName'] ?? 'Level 2'}',
+                            '${(5 - ((_plantInfo['waterCount'] ?? 0) % 5)).clamp(0, 5)} siram lagi ke Level ${((_plantInfo['growthLevel'] ?? 1) + 1).clamp(1, 5)}',
                             style: const TextStyle(
-                                color: Colors.grey, fontSize: 12),
+                                color: Color(0xFF8AA79A), fontSize: 12),
                           ),
                           const SizedBox(height: 8),
                           // Dot indikator level
@@ -357,13 +368,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 TextStyle(color: Colors.grey, fontSize: 12),
                           ),
                           const SizedBox(height: 16),
+                          // Info box
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Colors.grey.withOpacity(0.2),
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                const Text(
+                                  '💡 Tip Tumbuh Pohon:',
+                                  style: TextStyle(
+                                    color: Color(0xFF4FE38A),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  'Setiap menyelesaikan kebiasaan atau tugas, pohon mendapat air otomatis!',
+                                  style: const TextStyle(
+                                    color: Color(0xFF8AA79A),
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 12),
                           // Tombol siram
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: _siramTanaman,
+                              onPressed: (_plantInfo['waterCount'] ?? 0) > 0
+                                  ? _siramTanaman
+                                  : null,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF2D5A27),
+                                backgroundColor: (_plantInfo['waterCount'] ?? 0) > 0
+                                    ? const Color(0xFF2D5A27)
+                                    : Colors.grey,
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 14),
                                 shape: RoundedRectangleBorder(
@@ -396,7 +443,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         type: BottomNavigationBarType.fixed,
         currentIndex: 0,
       onTap: (index) {
-  if (index == 2) {
+  if (index == 1) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const HabitScreen()),
+    );
+  } else if (index == 2) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const MoodInputScreen()),
