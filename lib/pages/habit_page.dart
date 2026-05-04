@@ -70,7 +70,7 @@ class _HabitPageState extends State<HabitPage> {
               ),
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
 
             /// GRID ICON
             GridView.builder(
@@ -81,6 +81,7 @@ class _HabitPageState extends State<HabitPage> {
                 crossAxisCount: 4,
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
+                mainAxisExtent: 70, // 🔥 INI KUNCI
               ),
               itemCount: icons.length,
               itemBuilder: (context, index) {
@@ -91,8 +92,8 @@ class _HabitPageState extends State<HabitPage> {
                     });
                   },
                   child: Container(
-                    width: 70,
-                    height: 70,
+                    //width: 70,
+                    //height: 70,
                     decoration: BoxDecoration(
                       color: const Color(0xFF1A3A1A),
                       borderRadius: BorderRadius.circular(12),
@@ -106,7 +107,7 @@ class _HabitPageState extends State<HabitPage> {
                     child: Center(
                       child: Text(
                         icons[index],
-                        style: const TextStyle(fontSize: 28),
+                        style: const TextStyle(fontSize: 25),
                       ),
                     ),
                   ),
@@ -118,11 +119,11 @@ class _HabitPageState extends State<HabitPage> {
 
             /// TOGGLE REMINDER
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1A3A1A),
+                  color: const Color(0xFF1A3A1A)..withOpacity(0.8),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -146,7 +147,7 @@ class _HabitPageState extends State<HabitPage> {
               ),
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
 
             /// BUTTON TAMBAH HABIT
             Padding(
