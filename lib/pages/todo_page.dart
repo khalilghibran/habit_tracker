@@ -118,7 +118,9 @@ class _TodoPageState extends State<TodoPage> {
                   margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1A3A1A),
+                      color: item.isDone
+                      ? const Color.fromARGB(255, 17, 81, 32)
+                      : const Color(0xFF1A3A1A),
                       borderRadius: BorderRadius.circular(14),
                     ),
                     
@@ -171,12 +173,20 @@ class _TodoPageState extends State<TodoPage> {
 
             const SizedBox(height: 20),
 
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  "Habit",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: const [
+                  Text(
+                    "Habit",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Divider(color: Colors.white24),
+                  ),
+                ],
+              ),
             ),
 
             const SizedBox(height: 10),
@@ -192,7 +202,9 @@ class _TodoPageState extends State<TodoPage> {
                     margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1A3A1A),
+                      color: habit.isDone
+                      ? const Color.fromARGB(255, 17, 81, 32)
+                      : const Color(0xFF1A3A1A),
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: Row(
@@ -252,9 +264,9 @@ class _TodoPageState extends State<TodoPage> {
                 },
 
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  side: const BorderSide(color: Colors.green),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: const Color(0xFF0D1F0F),
+                  side: const BorderSide(color: Colors.green, width: 1.5),
+                  padding: const EdgeInsets.symmetric(vertical: 18),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
