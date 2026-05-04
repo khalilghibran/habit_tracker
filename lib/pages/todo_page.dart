@@ -15,7 +15,6 @@ class _TodoPageState extends State<TodoPage> {
   @override
   void initState() {
     super.initState();
-    generateTodoFromHabit();
   }
 
   @override
@@ -172,6 +171,72 @@ class _TodoPageState extends State<TodoPage> {
 
             const SizedBox(height: 20),
 
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  "Habit",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+            ),
+
+            const SizedBox(height: 10),
+
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: habitList.length,
+              itemBuilder: (context, index) {
+                final habit = habitList[index];
+
+                  return Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1A3A1A),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Row(
+                      children: [
+
+                        Text(
+                          habit.icon,
+                          style: const TextStyle(fontSize: 20),
+                        ),
+
+                        const SizedBox(width: 10),
+
+                        Checkbox(
+                          value: habit.isDone,
+                          onChanged: (_) {
+                            setState(() {
+                              checkHabit(index);
+                            });
+                          },
+                          activeColor: Colors.green,
+                        ),
+
+                        const SizedBox(width: 10),
+
+                        Expanded(
+                          child: Text(
+                            habit.name,
+                            style: TextStyle(
+                              color: Colors.white,
+                              decoration:
+                              habit.isDone ? TextDecoration.lineThrough : null,
+                            ),
+                          ),
+                        ),
+
+                        const Text("+1💧", style: TextStyle(color: Colors.blue)),
+                      ],
+                    ),
+                  );
+                },
+              ),
+
+            const SizedBox(height: 20),
+
             /// BUTTON TAMBAH HABIT
             Padding(
               padding: const EdgeInsets.all(16),
@@ -183,10 +248,9 @@ class _TodoPageState extends State<TodoPage> {
                   );
 
                   setState(() {
-                    generateTodoFromHabit();
                   });
                 },
-                
+
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   side: const BorderSide(color: Colors.green),

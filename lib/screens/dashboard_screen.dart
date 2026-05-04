@@ -446,7 +446,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (_) => const TodoPage()),
-          );
+        ).then((_) async {
+            await _loadData(); // reload PlantLogic
+            setState(() {});
+          });
         }
   if (index == 2) {
     Navigator.push(
