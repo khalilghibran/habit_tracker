@@ -18,7 +18,7 @@ class Habit {
 class Todo {
   String title;
   bool isDone;
-  String icon; // 🔥 tambahin
+  String icon;
 
   Todo({
     required this.title,
@@ -49,8 +49,6 @@ Future<void> tambahHabit(String name, String icon) async {
   habitList.add(
     Habit(name: name, icon: icon),
   );
-  // Reward water untuk menambah habit baru (+1 water)
-  await tambahAir(1);
 }
 
 // ceklist habit - index
@@ -70,15 +68,13 @@ Future<void> tambahTodo(String title, String icon) async {
   todoList.add(
     Todo(title: title, icon: icon),
   );
-  // Reward water untuk menambah todo baru (+1 water)
-  await tambahAir(1);
 }
 
 // ceklist todo
 Future<void> checkTodo(int index) async {
   if (!todoList[index].isDone) {
     todoList[index].isDone = true;
-    await tambahAir(1); // tambah reward (+1 water per todo completion)
+    await tambahAir(1);
   }
 }
 

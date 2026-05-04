@@ -3,9 +3,9 @@ import 'package:habit_tracker/logic/plant_logic.dart';
 import 'package:habit_tracker/screens/report_screen.dart';
 import 'package:habit_tracker/screens/mood_input_screen.dart';
 import 'package:habit_tracker/screens/sleep_input_screen.dart';
-import 'package:habit_tracker/screens/todo_screen.dart';
+import 'package:habit_tracker/pages/todo_page.dart';
 import 'package:habit_tracker/logic/taskhabit_logic.dart';
-
+import 'package:habit_tracker/screens/habit_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -236,7 +236,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute<void>(
-                                  builder: (_) => const TodoScreen(),
+                                  builder: (_) => const TodoPage(),
                                 ),
                               );
                             },
@@ -443,6 +443,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         type: BottomNavigationBarType.fixed,
         currentIndex: 0,
       onTap: (index) {
+        if (index == 1) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const TodoPage()),
+          );
+        }
   if (index == 2) {
     Navigator.push(
       context,

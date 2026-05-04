@@ -110,15 +110,15 @@ class _TodoPageState extends State<TodoPage> {
                 final item = todoList[index];
 
                 return Container(
-                  margin: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 6),
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1A3A1A),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                  child: Row(
-                    children: [
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1A3A1A),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    
+                    child: Row(
+                      children: [
 
                       Container(
                         padding: const EdgeInsets.all(8),
@@ -130,7 +130,7 @@ class _TodoPageState extends State<TodoPage> {
                           item.icon,
                           style: const TextStyle(fontSize: 20),
                         ),
-                      ),
+                      ),  
 
                       const SizedBox(width: 10),
 
