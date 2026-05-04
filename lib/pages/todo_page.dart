@@ -13,6 +13,12 @@ class _TodoPageState extends State<TodoPage> {
   TextEditingController todoController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    generateTodoFromHabit();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0D1F0F),
@@ -170,14 +176,17 @@ class _TodoPageState extends State<TodoPage> {
             Padding(
               padding: const EdgeInsets.all(16),
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  await Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => const HabitPage(),
-                    ),
+                    MaterialPageRoute(builder: (_) => const HabitPage()),
                   );
+
+                  setState(() {
+                    generateTodoFromHabit();
+                  });
                 },
+                
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   side: const BorderSide(color: Colors.green),

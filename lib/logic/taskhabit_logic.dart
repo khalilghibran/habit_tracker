@@ -78,7 +78,20 @@ Future<void> checkTodo(int index) async {
   }
 }
 
+void generateTodoFromHabit() {
+  for (var habit in habitList) {
+    bool sudahAda = todoList.any((todo) => todo.title == habit.name);
 
+    if (!sudahAda) {
+      todoList.add(
+        Todo(
+          title: habit.name,
+          icon: habit.icon,
+        ),
+      );
+    }
+  }
+}
 
 //-----------------
 /// Function Reward
@@ -86,6 +99,6 @@ Future<void> checkTodo(int index) async {
 
 Future<void> tambahAir(int amount) async {
   air += amount;
-  // Automatically add water to plant
   await PlantLogic.addWaterReward(amount);
 }
+
