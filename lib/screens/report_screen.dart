@@ -4,9 +4,30 @@ import 'package:habit_tracker/logic/mood_logic.dart';
 import 'package:habit_tracker/logic/sleep_logic.dart';
 import 'package:habit_tracker/logic/report_logic.dart';
 import 'package:habit_tracker/logic/taskhabit_logic.dart';
+import 'package:habit_tracker/logic/plant_logic.dart';
 
-class ReportScreen extends StatelessWidget {
+class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
+
+  @override
+  State<ReportScreen> createState() => _ReportScreenState();
+}
+
+class _ReportScreenState extends State<ReportScreen> {
+  int _waterCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadWater();
+  }
+
+  Future<void> _loadWater() async {
+    final info = await PlantLogic.getPlantInfo();
+    setState(() {
+      _waterCount = info['waterCount'] ?? 0;
+    });
+  }
 
   String _getDateRange() {
     final now = DateTime.now();
@@ -64,13 +85,13 @@ class ReportScreen extends StatelessWidget {
                       color: const Color(0xFF1A3A1A),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
-                        Text('💧', style: TextStyle(fontSize: 16)),
-                        SizedBox(width: 4),
+                        const Text('💧', style: TextStyle(fontSize: 16)),
+                        const SizedBox(width: 4),
                         Text(
-                          '7',
-                          style: TextStyle(
+                          '$_waterCount',
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
