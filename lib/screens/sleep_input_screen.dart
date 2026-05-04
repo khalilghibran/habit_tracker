@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../logic/sleep_logic.dart';
 import '../models/sleep_model.dart';
+import 'package:habit_tracker/logic/plant_logic.dart';
 
 class SleepInputScreen extends StatefulWidget {
   const SleepInputScreen({Key? key}) : super(key: key);
@@ -13,18 +14,28 @@ class SleepInputScreen extends StatefulWidget {
 class _SleepInputScreenState extends State<SleepInputScreen> {
   late int _hours;
   late int _minutes;
+  int _waterCount = 0;
 
   @override
   void initState() {
     super.initState();
     _hours = 6;
     _minutes = 30;
+    _loadWater();
+  }
+
+  Future<void> _loadWater() async {
+    final info = await PlantLogic.getPlantInfo();
+    setState(() {
+      _waterCount = info['waterCount'] ?? 0;
+    });
   }
 
   void _addHours(int amount) {
     setState(() {
       _hours += amount;
       if (_hours < 0) _hours = 0;
+      if (_hours > 12) _hours = 12; // maksimal 12 jam
     });
   }
 
@@ -32,17 +43,14 @@ class _SleepInputScreenState extends State<SleepInputScreen> {
     final now = DateTime.now();
     final days = ['SEN', 'SEL', 'RAB', 'KAM', 'JUM', 'SAB', 'MIN'];
     final startDay = now.subtract(Duration(days: (now.weekday - 1) % 7));
-
     final startDayName = days[startDay.weekday % 7];
     final startDate = startDay.day.toString().padLeft(2, '0');
     final endDate = startDay.add(const Duration(days: 6)).day.toString().padLeft(2, '0');
-
     return '$startDayName $startDate - MON $endDate';
   }
 
   Future<void> _submitSleep() async {
     final sleepLogic = context.read<SleepLogic>();
-
     final duration = _hours + (_minutes / 60);
     final entry = SleepEntry(
       dateTime: DateTime.now(),
@@ -51,11 +59,19 @@ class _SleepInputScreenState extends State<SleepInputScreen> {
 
     await sleepLogic.addSleepEntry(entry);
 
+    // Kalau tidur >= 7 jam dapat reward air
+    if (duration >= 7) {
+      await PlantLogic.addWaterReward(1);
+      await _loadWater(); // refresh jumlah air
+    }
+
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('✓ Tidur berhasil dicatat!'),
-          backgroundColor: Color(0xFF2D5A27),
+        SnackBar(
+          content: Text(duration >= 7
+              ? '✓ Tidur dicatat! +1 💧 reward!'
+              : '✓ Tidur berhasil dicatat!'),
+          backgroundColor: const Color(0xFF2D5A27),
         ),
       );
       Navigator.pop(context);
@@ -99,13 +115,14 @@ class _SleepInputScreenState extends State<SleepInputScreen> {
                     width: 1.5,
                   ),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(Icons.water_drop, color: Color(0xFF4FE38A), size: 14),
-                    SizedBox(width: 4),
+                    const Icon(Icons.water_drop,
+                        color: Color(0xFF4FE38A), size: 14),
+                    const SizedBox(width: 4),
                     Text(
-                      '7',
-                      style: TextStyle(
+                      '$_waterCount',
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -123,7 +140,6 @@ class _SleepInputScreenState extends State<SleepInputScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
             const Text(
               'Sleep Tracker',
               style: TextStyle(
@@ -142,7 +158,6 @@ class _SleepInputScreenState extends State<SleepInputScreen> {
             ),
             const SizedBox(height: 24),
 
-            // Total Sleep Time Section
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -165,8 +180,6 @@ class _SleepInputScreenState extends State<SleepInputScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-
-                  // Time Display with Controls
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -179,11 +192,8 @@ class _SleepInputScreenState extends State<SleepInputScreen> {
                             color: Colors.grey.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Icon(
-                            Icons.remove,
-                            color: Color(0xFF8AA79A),
-                            size: 20,
-                          ),
+                          child: const Icon(Icons.remove,
+                              color: Color(0xFF8AA79A), size: 20),
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -206,26 +216,23 @@ class _SleepInputScreenState extends State<SleepInputScreen> {
                             color: Colors.grey.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Icon(
-                            Icons.add,
-                            color: Color(0xFF8AA79A),
-                            size: 20,
-                          ),
+                          child: const Icon(Icons.add,
+                              color: Color(0xFF8AA79A), size: 20),
                         ),
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 12),
-                  const Text(
-                    '15% lebih dari kemarin',
+                  Text(
+                    _hours >= 7 ? '✓ Tidur cukup! +1 💧' : 'Butuh ${7 - _hours} jam lagi untuk reward',
                     style: TextStyle(
-                      color: Color(0xFF4FE38A),
+                      color: _hours >= 7
+                          ? const Color(0xFF4FE38A)
+                          : Colors.orange,
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-
                   const SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
@@ -251,10 +258,8 @@ class _SleepInputScreenState extends State<SleepInputScreen> {
                 ],
               ),
             ),
-
             const SizedBox(height: 24),
 
-            // Weekly Trend Section
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -289,8 +294,6 @@ class _SleepInputScreenState extends State<SleepInputScreen> {
                     ],
                   ),
                   const SizedBox(height: 16),
-
-                  // Weekly Bar Chart
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -307,10 +310,8 @@ class _SleepInputScreenState extends State<SleepInputScreen> {
                 ],
               ),
             ),
-
             const SizedBox(height: 24),
 
-            // Stats Row
             Row(
               children: [
                 Expanded(
@@ -402,7 +403,6 @@ class _SleepInputScreenState extends State<SleepInputScreen> {
                 ),
               ],
             ),
-
             const SizedBox(height: 24),
           ],
         ),
@@ -413,7 +413,6 @@ class _SleepInputScreenState extends State<SleepInputScreen> {
   Widget _buildBarChart(String day, double hours, bool isActive) {
     final maxHeight = 100.0;
     final barHeight = (hours / 10) * maxHeight;
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -421,7 +420,9 @@ class _SleepInputScreenState extends State<SleepInputScreen> {
           width: 28,
           height: barHeight,
           decoration: BoxDecoration(
-            color: isActive ? const Color(0xFF4FE38A) : Colors.grey.withOpacity(0.3),
+            color: isActive
+                ? const Color(0xFF4FE38A)
+                : Colors.grey.withOpacity(0.3),
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(4),
               topRight: Radius.circular(4),
