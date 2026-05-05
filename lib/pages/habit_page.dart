@@ -156,12 +156,20 @@ class _HabitPageState extends State<HabitPage> {
                 onPressed: () {
                   if (habitController.text.isNotEmpty) {
                     tambahHabit(
-                      habitController.text,
-                      icons[selectedIconIndex],
-                    );
+                    habitController.text,
+                    icons[selectedIconIndex],
+                  );
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("🌱 Habit berhasil ditambahkan"),
+                    duration: Duration(seconds: 1),
+                    backgroundColor: Colors.green,
+                    ),
+                  );
 
                   Navigator.pop(context);
-                }
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,

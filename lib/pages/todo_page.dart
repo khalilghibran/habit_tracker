@@ -87,15 +87,24 @@ class _TodoPageState extends State<TodoPage> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  setState(() {
-                    if (todoController.text.isNotEmpty) {
-                      tambahTodo(
-                        todoController.text,
-                        '📝',
-                      );
-                      todoController.clear();
-                    }
-                  });
+                  if (todoController.text.isNotEmpty) {
+                    tambahTodo(
+                      todoController.text,
+                      '📝',
+                    );
+
+                todoController.clear();
+
+                setState(() {});
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("✅ To-do berhasil ditambahkan"),
+                    duration: Duration(seconds: 1),
+                    backgroundColor: Colors.green,
+                    ),
+                  );
+                 }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
@@ -143,10 +152,18 @@ class _TodoPageState extends State<TodoPage> {
 
                       Checkbox(
                         value: item.isDone,
-                        onChanged: (_) {
-                          setState(() {
-                            checkTodo(index);
-                          });
+                        onChanged: (_) async {
+                          await checkTodo(index);
+
+                          setState(() {});
+
+                           ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("+1 💧 Air didapat!"),
+                              duration: Duration(milliseconds: 800),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
                         },
                         activeColor: Colors.green,
                       ),
@@ -219,9 +236,19 @@ class _TodoPageState extends State<TodoPage> {
 
                         Checkbox(
                           value: habit.isDone,
-                          onChanged: (_) {
-                            setState(() {
-                              checkHabit(index);
+                          onChanged: (_){
+                            setState(() async{
+                              await checkHabit(index);
+
+                              setState(() {});
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("+1 💧 Air didapat!"),
+                                  duration: Duration(milliseconds: 800),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
                             });
                           },
                           activeColor: Colors.green,
