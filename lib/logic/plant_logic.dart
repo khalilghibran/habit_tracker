@@ -45,6 +45,7 @@ class PlantLogic {
       'name': plant.name,
       'waterCount': plant.waterCount,
       'growthLevel': plant.growthLevel,
+      'progress': plant.progress,
       'stageName': plant.stageName,
       'condition': plant.condition,
       'isWilting': plant.isWilting,

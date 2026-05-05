@@ -39,27 +39,144 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<void> _siramTanaman() async {
+    final before = await PlantLogic.getPlantInfo();
+    final beforeLevel = before['growthLevel'] ?? 1;
+
     final berhasil = await PlantLogic.waterPlant();
+
+    final after = await PlantLogic.getPlantInfo();
+    final afterLevel = after['growthLevel'] ?? 1;
+
     if (berhasil) {
+      _showWaterFloating();
       await _loadData();
-      if (mounted) {
+
+      if (afterLevel > beforeLevel) {
+        _showLevelUpDialog(afterLevel);
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('🌿 Tanaman berhasil disiram!'),
+            content: Text('🌿 Tanaman disiram!'),
             backgroundColor: Color(0xFF2D5A27),
           ),
         );
       }
     } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('💧 Air tidak cukup!'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('💧 Air tidak cukup!'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
+  }
+
+  void _showLevelUpDialog(int level) {
+    showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        backgroundColor: const Color(0xFF1A3A1A),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF1A3A1A),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.greenAccent.withOpacity(0.6),
+                blurRadius: 20,
+                spreadRadius: 2,
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                "🎉 LEVEL UP!",
+                style: TextStyle(
+                  color: Colors.greenAccent,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                "Tanaman naik ke Level $level 🌿",
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              AnimatedScale(
+                scale: 1.2,
+                duration: Duration(milliseconds: 800),
+                child: const Text("🌳", style: TextStyle(fontSize: 50)),
+              ),
+
+              const SizedBox(height: 20),
+
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  shape: RoundedRectangleBorder(
+                   borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text("Mantap!"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+    void _showWaterFloating() {
+    final overlay = Overlay.of(context);
+
+    final entry = OverlayEntry(
+      builder: (context) => Positioned(
+        bottom: 120,
+        left: MediaQuery.of(context).size.width / 2 - 20,
+        child: Material(
+          color: Colors.transparent,
+          child: TweenAnimationBuilder(
+            tween: Tween(begin: 0.0, end: -60.0),
+            duration: const Duration(milliseconds: 800),
+            builder: (context, value, child) {
+              return Transform.translate(
+                offset: Offset(0, value),
+                child: Opacity(
+                  opacity: (1 - (value.abs() / 60)).clamp(0, 1),
+                  child: const Text(
+                    "+1 💧",
+                    style: TextStyle(
+                      color: Colors.lightBlueAccent,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+
+    overlay.insert(entry);
+
+    Future.delayed(const Duration(milliseconds: 800), () {
+      entry.remove();
+    });
   }
 
   String _getGreeting() {
@@ -68,7 +185,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (hour < 15) return 'Selamat Siang';
     if (hour < 18) return 'Selamat Sore';
     return 'Selamat Malam';
-  }
+  } 
 
   String _getDay() {
     const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
@@ -79,6 +196,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final progress = _plantInfo['progress'] ?? 0;
+    final sisa = 5 - progress;
+
     return Scaffold(
       backgroundColor: const Color(0xFF0D1F0F),
       body: _isLoading
@@ -319,26 +439,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           const SizedBox(height: 12),
                           // Info level
                           Text(
-                            '${(5 - ((_plantInfo['waterCount'] ?? 0) % 5)).clamp(0, 5)} siram lagi ke Level ${((_plantInfo['growthLevel'] ?? 1) + 1).clamp(1, 5)}',
+                            '$sisa siram lagi ke Level ${((_plantInfo['growthLevel'] ?? 1) + 1).clamp(1, 5)}',
                             style: const TextStyle(
-                                color: Color(0xFF8AA79A), fontSize: 12),
-                          ),
+                              color: Color(0xFF8AA79A),
+                              fontSize: 12,
+                            ),
+                              ),
                           const SizedBox(height: 8),
                           // Dot indikator level
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: List.generate(5, (i) {
-                              final level = _plantInfo['growthLevel'] ?? 1;
+                              final progress = _plantInfo['progress'] ?? 0;
+
                               return Container(
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 4),
+                                margin: const EdgeInsets.symmetric(horizontal: 4),
                                 width: 8,
                                 height: 8,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: i < level
-                                      ? Colors.green
-                                      : const Color(0xFF0D1F0F),
+                                  color: i < progress
+                                  ? Colors.green
+                                  : const Color(0xFF0D1F0F),
                                 ),
                               );
                             }),

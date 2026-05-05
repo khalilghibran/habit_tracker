@@ -3,6 +3,7 @@ class Plant {
   String name;
   int waterCount;
   int growthLevel;
+  int progress;   
   DateTime? lastWatered;
   DateTime? lastClaimed;
   DateTime createdAt;
@@ -11,6 +12,7 @@ class Plant {
     required this.id,
     required this.name,
     this.waterCount = 0,
+    this.progress = 0,
     this.growthLevel = 1,
     this.lastWatered,
     this.lastClaimed,
@@ -36,14 +38,18 @@ class Plant {
 
   bool water() {
     if (waterCount <= 0) return false;
-    waterCount--;
+
+    waterCount--; 
+    progress++;   
     lastWatered = DateTime.now();
-    if (waterCount >= 5 && growthLevel < 5) {
-      growthLevel++;
-      waterCount -= 5;
-    }
-    return true;
+
+  if (progress >= 5 && growthLevel < 5) {
+    growthLevel++;
+    progress = 0;
   }
+
+  return true;
+}
 
   bool claimDailyWater() {
     if (hasClaimedToday) return false;
@@ -58,7 +64,7 @@ class Plant {
       case 2: return 'Kecambah 🌿';
       case 3: return 'Tumbuh 🪴';
       case 4: return 'Berkembang 🌳';
-      case 5: return 'Mekar 🌸';
+      case 5: return 'Mekar 🌸';  
       default: return 'Benih 🌱';
     }
   }
@@ -68,6 +74,7 @@ class Plant {
     'name': name,
     'waterCount': waterCount,
     'growthLevel': growthLevel,
+    'progress': progress,
     'lastWatered': lastWatered?.toIso8601String(),
     'lastClaimed': lastClaimed?.toIso8601String(),
     'createdAt': createdAt.toIso8601String(),
@@ -78,6 +85,7 @@ class Plant {
     name: json['name'],
     waterCount: json['waterCount'] ?? 0,
     growthLevel: json['growthLevel'] ?? 1,
+    progress: json['progress'] ?? 0,
     lastWatered: json['lastWatered'] != null
         ? DateTime.parse(json['lastWatered']) : null,
     lastClaimed: json['lastClaimed'] != null

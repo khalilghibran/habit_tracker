@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../logic/taskhabit_logic.dart';
 import 'habit_page.dart';
+import '../logic/plant_logic.dart';
 
 class TodoPage extends StatefulWidget {
   const TodoPage({super.key});
@@ -12,9 +13,18 @@ class TodoPage extends StatefulWidget {
 class _TodoPageState extends State<TodoPage> {
   TextEditingController todoController = TextEditingController();
 
+  Future<void> _loadAir() async {
+  final info = await PlantLogic.getPlantInfo();
+
+  setState(() {
+    air = info['waterCount'] ?? 0;
+  });
+}
+
   @override
   void initState() {
     super.initState();
+    _loadAir(); // 🔥 penting
   }
 
   @override
@@ -154,8 +164,7 @@ class _TodoPageState extends State<TodoPage> {
                         value: item.isDone,
                         onChanged: (_) async {
                           await checkTodo(index);
-
-                          setState(() {});
+                          await _loadAir();
 
                            ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -236,20 +245,17 @@ class _TodoPageState extends State<TodoPage> {
 
                         Checkbox(
                           value: habit.isDone,
-                          onChanged: (_){
-                            setState(() async{
-                              await checkHabit(index);
+                          onChanged: (_) async {
+                            await checkHabit(index);
+                            await _loadAir();
 
-                              setState(() {});
-
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("+1 💧 Air didapat!"),
-                                  duration: Duration(milliseconds: 800),
-                                  backgroundColor: Colors.green,
-                                ),
-                              );
-                            });
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("+1 💧 Air didapat!"),
+                                duration: Duration(milliseconds: 800),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
                           },
                           activeColor: Colors.green,
                         ),
@@ -286,8 +292,7 @@ class _TodoPageState extends State<TodoPage> {
                     MaterialPageRoute(builder: (_) => const HabitPage()),
                   );
 
-                  setState(() {
-                  });
+                  await _loadAir();
                 },
 
                 style: ElevatedButton.styleFrom(
